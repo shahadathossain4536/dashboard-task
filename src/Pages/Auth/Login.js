@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
@@ -11,7 +12,7 @@ const Login = () => {
               OPERATIONS
             </h2>
             <p className="uppercase text-center text-2xl mt-10 font-semibold">
-              Signin
+              Sign in
             </p>
             <p className="text-center pt-[9px]">
               Enter your credentials to access your account
@@ -41,9 +42,11 @@ const Login = () => {
                 />
               </div>
               {/* password */}
-              <button className="btn uppercase btn-warning text-white w-full rounded-md text-xl mt-[30px]">
-                Sing in
-              </button>
+              <Link to="dashboard">
+                <button className="btn uppercase btn-warning text-white w-full rounded-md text-xl mt-[30px]">
+                  Sing in
+                </button>
+              </Link>
             </form>
           </div>
         </div>
