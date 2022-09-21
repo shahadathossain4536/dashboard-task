@@ -4,19 +4,33 @@ import {
   HiAcademicCap,
   HiCog,
   HiCurrencyDollar,
+  HiOutlineArrowCircleLeft,
   HiOutlineBookmark,
   HiOutlineCurrencyDollar,
   HiOutlineDocumentReport,
   HiOutlineHome,
   HiOutlineLogout,
+  HiOutlineSearch,
 } from "react-icons/hi";
+import { IoNotificationsOutline } from "react-icons/io5";
 const Dashboard = () => {
   return (
     <div className="drawer drawer-mobile ">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col items-center justify-center ">
+      <div className="drawer-content flex flex-col ">
         {/* <!-- Page content here --> */}
-        <h2 className="text-3xl">DashBoard</h2>
+        <div className="flex justify-between items-center py-4 px-2">
+          <button>
+            <HiOutlineArrowCircleLeft className="w-8 h-8" />
+          </button>
+          <div className="flex justify-center items-center ">
+            <div className="flex justify-center items-center input input-bordered mr-[27px]">
+              <input className="outline-none" type="text" />
+              <HiOutlineSearch className="w-8 h-8" />
+            </div>
+            <IoNotificationsOutline className="w-8 h-8" />
+          </div>
+        </div>
         <Outlet></Outlet>
         <label
           htmlFor="my-drawer-2"
