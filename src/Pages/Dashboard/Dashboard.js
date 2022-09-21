@@ -17,7 +17,7 @@ const Dashboard = () => {
   return (
     <div className="drawer drawer-mobile ">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col ">
+      <div className="drawer-content flex flex-col overflow-ellipsis">
         {/* <!-- Page content here --> */}
         <div className="flex justify-between items-center py-4 px-2">
           <button>
