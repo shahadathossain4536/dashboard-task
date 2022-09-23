@@ -11,6 +11,7 @@ import {
   HiOutlineHome,
   HiOutlineLogout,
   HiOutlineSearch,
+  HiMenu,
 } from "react-icons/hi";
 import { IoNotificationsOutline } from "react-icons/io5";
 const Dashboard = () => {
@@ -19,6 +20,11 @@ const Dashboard = () => {
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col overflow-ellipsis">
         {/* <!-- Page content here --> */}
+        <div className="flex justify-end">
+          <label htmlFor="my-drawer-2" className=" drawer-button lg:hidden">
+            <HiMenu className="h-7 w-7" />
+          </label>
+        </div>
         <div className="flex justify-between items-center py-4 px-2">
           <button>
             <HiOutlineArrowCircleLeft className="w-8 h-8" />
@@ -32,12 +38,6 @@ const Dashboard = () => {
           </div>
         </div>
         <Outlet></Outlet>
-        <label
-          htmlFor="my-drawer-2"
-          className="btn btn-primary drawer-button lg:hidden"
-        >
-          Open drawer
-        </label>
       </div>
       <div className="drawer-side ">
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
