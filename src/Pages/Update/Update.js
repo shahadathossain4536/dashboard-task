@@ -12,7 +12,7 @@ const Update = () => {
   console.log(student);
 
   useEffect(() => {
-    const url = `http://localhost:5000/students/${id}`;
+    const url = `https://aqueous-cliffs-52735.herokuapp.com/students/${id}`;
     console.log(url);
     fetch(url)
       .then((res) => res.json())
@@ -29,7 +29,7 @@ const Update = () => {
 
     console.log(name, email, phoneNumber, enrollNumber, formattedDate);
 
-    fetch(`http://localhost:5000/students/${id}`, {
+    fetch(`https://aqueous-cliffs-52735.herokuapp.com/students/${id}`, {
       method: "PATCH",
       body: JSON.stringify({
         name,

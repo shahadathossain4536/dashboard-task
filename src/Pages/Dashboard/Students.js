@@ -14,7 +14,7 @@ const Students = () => {
   const [oneStudent, setOneStudent] = useState([]);
   console.log(formattedDate);
   useEffect(() => {
-    fetch("http://localhost:5000/students")
+    fetch("https://aqueous-cliffs-52735.herokuapp.com/students")
       .then((res) => res.json())
       .then((data) => setStudents(data));
   }, [isReload]);
@@ -30,7 +30,7 @@ const Students = () => {
 
     console.log(name, email, phoneNumber, enrollNumber, formattedDate);
 
-    fetch("http://localhost:5000/students", {
+    fetch("https://aqueous-cliffs-52735.herokuapp.com/students", {
       method: "POST",
       body: JSON.stringify({
         name,
@@ -56,7 +56,7 @@ const Students = () => {
   const handleDelete = (id) => {
     const proceed = window.confirm("Are you sure you want to delete");
     if (proceed) {
-      const url = ` http://localhost:5000/students/${id}`;
+      const url = ` https://aqueous-cliffs-52735.herokuapp.com/students/${id}`;
       fetch(url, {
         method: "DELETE",
       })
