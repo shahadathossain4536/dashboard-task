@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const Update = () => {
   const [startDate, setStartDate] = useState(new Date());
   const formattedDate = format(startDate, "PP");
 
   const { id } = useParams();
   const [student, setStudent] = useState({});
+  let navigate = useNavigate();
   console.log(student);
 
   useEffect(() => {
@@ -43,7 +44,9 @@ const Update = () => {
       },
     })
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((data) => {
+        navigate("/dashboard/students");
+      });
   };
   return (
     <div className="">
