@@ -9,6 +9,7 @@ import Students from "./Pages/Dashboard/Students";
 import Payment from "./Pages/Dashboard/Payment";
 import Report from "./Pages/Dashboard/Report";
 import Settings from "./Pages/Dashboard/Settings";
+import Update from "./Pages/Update/Update";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login></Login>}></Route>
         <Route path="/login" element={<Login></Login>}></Route>
+        <Route path="/update/:id" element={<Update></Update>}></Route>
         <Route path="dashboard" element={<Dashboard></Dashboard>}>
           <Route index element={<Home></Home>}></Route>
           <Route path="course" element={<Course />}></Route>

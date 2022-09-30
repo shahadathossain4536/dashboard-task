@@ -1,7 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoCodeOutline } from "react-icons/io5";
 import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
+import { useEffect } from "react";
+import DatePicker from "react-datepicker";
+import { format } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
+import { Link } from "react-router-dom";
 const Students = () => {
+  const [students, setStudents] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const formattedDate = format(startDate, "PP");
+  const [isReload, setIsReload] = useState(false);
+  const [oneStudent, setOneStudent] = useState([]);
+  console.log(formattedDate);
+  useEffect(() => {
+    fetch("http://localhost:5000/students")
+      .then((res) => res.json())
+      .then((data) => setStudents(data));
+  }, [isReload]);
+
+  const handleAddStudent = (event) => {
+    event.preventDefault();
+
+    const name = event.target.name.value;
+    const email = event.target.email.value;
+    const phoneNumber = event.target.phoneNumber.value;
+    const enrollNumber = event.target.enrollNumber.value;
+    // const dateOfAdmission = event.target.dateOfAdmission.value;
+
+    console.log(name, email, phoneNumber, enrollNumber, formattedDate);
+
+    fetch("http://localhost:5000/students", {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        email,
+        phoneNumber,
+        enrollNumber,
+        dateOfAdmission: formattedDate,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        setIsReload(!isReload);
+      });
+
+    event.target.reset();
+  };
+  // handleDelete
+  const handleDelete = (id) => {
+    const proceed = window.confirm("Are you sure you want to delete");
+    if (proceed) {
+      const url = ` http://localhost:5000/students/${id}`;
+      fetch(url, {
+        method: "DELETE",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.deletedCount > 0) {
+            const remaining = students.filter((item) => item._id !== id);
+            setStudents(remaining);
+          }
+        });
+    }
+  };
+  // handleDelete
+
+  // -----------------------------------------------------handleUpdate----------------------------------------------------------------
+  const handleUpdate = (id) => {
+    console.log(id);
+  };
+  // -----------------------------------------------------handleUpdate----------------------------------------------------------------
   return (
     <div className="bg-slate-100 h-screen">
       <div className="flex justify-between items-center mt-3 px-3 border-b-2 pb-4">
@@ -33,11 +107,12 @@ const Students = () => {
             ✕
           </label>
           <h3 className="text-3xl font-bold">Add / Edit Student</h3>
-          <form className="py-10">
+          <form className="py-10" onSubmit={handleAddStudent}>
             <div className="flex justify-between items-center py-1">
               <p className="mr-10 font-semibold">Name</p>
               <input
                 className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="name"
                 type="text"
               />
             </div>
@@ -45,6 +120,7 @@ const Students = () => {
               <p className="mr-10 font-semibold">Email</p>
               <input
                 className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="email"
                 type="email"
               />
             </div>
@@ -52,6 +128,7 @@ const Students = () => {
               <p className="mr-10 font-semibold">Phone</p>
               <input
                 className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="phoneNumber"
                 type="text"
               />
             </div>
@@ -59,29 +136,120 @@ const Students = () => {
               <p className="mr-10 font-semibold">Enroll Number</p>
               <input
                 className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="enrollNumber"
                 type="text"
               />
             </div>
             <div className="flex justify-between items-center py-1">
               <p className="mr-10 font-semibold">Date of admission</p>
-              <input
-                className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
-                type="text"
+
+              <DatePicker
+                className="bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
               />
+              {/* <input
+                className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="dateOfAdmission"
+                type="text"
+              /> */}
             </div>
             <div className="flex justify-between items-center pt-5">
               <p></p>
-              <button
-                type="Submit"
-                className="px-4 py-2 bg-yellow-500 text-white w-full rounded-md "
-              >
-                Submit
+            </div>
+            <div className="modal-action">
+              <button type="Submit">
+                {" "}
+                <label
+                  htmlFor="my-modal-3"
+                  className="px-4 py-2 bg-yellow-500 text-white w-full rounded-md cursor-pointer"
+                >
+                  Submit
+                </label>
               </button>
             </div>
           </form>
         </div>
       </div>
       {/* modal */}
+
+      {/* update modal */}
+      <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+      <div className="modal ">
+        <div className="modal-box relative bg-[#D9D9D9] ">
+          <label
+            htmlFor="my-modal-4"
+            className="btn btn-sm btn-circle absolute right-2 top-2"
+          >
+            ✕
+          </label>
+          <h3 className="text-3xl font-bold">Edit Student Data</h3>
+          <form className="py-10" onSubmit={handleAddStudent}>
+            <div className="flex justify-between items-center py-1">
+              <p className="mr-10 font-semibold">Name</p>
+              <input
+                className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="name"
+                type="text"
+              />
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <p className="mr-10 font-semibold">Email</p>
+              <input
+                className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="email"
+                type="email"
+              />
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <p className="mr-10 font-semibold">Phone</p>
+              <input
+                className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="phoneNumber"
+                type="text"
+              />
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <p className="mr-10 font-semibold">Enroll Number</p>
+              <input
+                className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="enrollNumber"
+                type="text"
+              />
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <p className="mr-10 font-semibold">Date of admission</p>
+
+              <DatePicker
+                className="bg-transparent border-gray-500 border-[1px] rounded-md py-2 "
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+              />
+              {/* <input
+                className=" bg-transparent border-gray-500 border-[1px] rounded-md py-2"
+                name="dateOfAdmission"
+                type="text"
+              /> */}
+            </div>
+            <div className="flex justify-between items-center pt-5">
+              <p></p>
+            </div>
+            <div className="modal-action">
+              <button type="Submit">
+                {" "}
+                <label
+                  htmlFor="my-modal-4"
+                  className="px-4 py-2 bg-yellow-500 text-white w-full rounded-md cursor-pointer"
+                >
+                  Update
+                </label>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* update modal */}
       <div className="overflow-x-auto">
         <table className="w-full">
           {/* <!-- head --> */}
@@ -97,101 +265,34 @@ const Students = () => {
               <th className="py-4"></th>
             </tr>
           </thead>
+
           <tbody>
-            {/* <!-- row 1 --> */}
-            <tr className="bg-white text-center border-y-4 border-slate-100">
-              <td className="py-6 text-lg">Karthi</td>
-              <td className="py-6 text-lg">karthi@gmmail.com</td>
-              <td className="py-6 text-lg">7305477760</td>
-              <td className="py-6 text-lg">1234567305477760</td>
-              <td className="py-6 text-lg">08-Dec, 2021</td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlinePencil />
-              </td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlineTrash />
-              </td>
-            </tr>
-            {/* <!-- row 2 --> */}
-            <tr className="bg-white text-center border-y-4 border-slate-100">
-              <td className="py-6 text-lg">Karthi</td>
-              <td className="py-6 text-lg">karthi@gmmail.com</td>
-              <td className="py-6 text-lg">7305477760</td>
-              <td className="py-6 text-lg">1234567305477760</td>
-              <td className="py-6 text-lg">08-Dec, 2021</td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlinePencil />
-              </td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlineTrash />
-              </td>
-            </tr>
-            {/* <!-- row 3 --> */}
-            <tr className="bg-white text-center border-y-4 border-slate-100">
-              <td className="py-6 text-lg">Karthi</td>
-              <td className="py-6 text-lg">karthi@gmmail.com</td>
-              <td className="py-6 text-lg">7305477760</td>
-              <td className="py-6 text-lg">1234567305477760</td>
-              <td className="py-6 text-lg">08-Dec, 2021</td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlinePencil />
-              </td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlineTrash />
-              </td>
-            </tr>
-            <tr className="bg-white text-center border-y-4 border-slate-100">
-              <td className="py-6 text-lg">Karthi</td>
-              <td className="py-6 text-lg">karthi@gmmail.com</td>
-              <td className="py-6 text-lg">7305477760</td>
-              <td className="py-6 text-lg">1234567305477760</td>
-              <td className="py-6 text-lg">08-Dec, 2021</td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlinePencil />
-              </td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlineTrash />
-              </td>
-            </tr>
-            <tr className="bg-white text-center border-y-4 border-slate-100">
-              <td className="py-6 text-lg">Karthi</td>
-              <td className="py-6 text-lg">karthi@gmmail.com</td>
-              <td className="py-6 text-lg">7305477760</td>
-              <td className="py-6 text-lg">1234567305477760</td>
-              <td className="py-6 text-lg">08-Dec, 2021</td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlinePencil />
-              </td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlineTrash />
-              </td>
-            </tr>
-            <tr className="bg-white text-center border-y-4 border-slate-100">
-              <td className="py-6 text-lg">Karthi</td>
-              <td className="py-6 text-lg">karthi@gmmail.com</td>
-              <td className="py-6 text-lg">7305477760</td>
-              <td className="py-6 text-lg">1234567305477760</td>
-              <td className="py-6 text-lg">08-Dec, 2021</td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlinePencil />
-              </td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlineTrash />
-              </td>
-            </tr>
-            <tr className="bg-white text-center border-y-4 border-slate-100">
-              <td className="py-6 text-lg">Karthi</td>
-              <td className="py-6 text-lg">karthi@gmmail.com</td>
-              <td className="py-6 text-lg">7305477760</td>
-              <td className="py-6 text-lg">1234567305477760</td>
-              <td className="py-6 text-lg">08-Dec, 2021</td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlinePencil />
-              </td>
-              <td className="py-6 text-lg text-yellow-500">
-                <HiOutlineTrash />
-              </td>
-            </tr>
+            {students.map((student) => (
+              <tr className="bg-white text-center border-y-4 border-slate-100">
+                <td className="py-6 text-lg">{student.name}</td>
+                <td className="py-6 text-lg">{student.email}</td>
+                <td className="py-6 text-lg">{student.phoneNumber}</td>
+                <td className="py-6 text-lg">{student.enrollNumber}</td>
+                <td className="py-6 text-lg">{student.dateOfAdmission}</td>
+                <td
+                  htmlFor="my-modal-4"
+                  onClick={() => handleUpdate(student._id)}
+                  className="py-6 text-lg text-yellow-500 cursor-pointer"
+                >
+                  <Link to={`/update/${student._id}`} className="">
+                    <button className=" btn btn-info mx-auto w-100 text-white">
+                      <HiOutlinePencil />
+                    </button>
+                  </Link>
+                </td>
+                <td
+                  onClick={() => handleDelete(student._id)}
+                  className="py-6 text-lg text-yellow-500 cursor-pointer"
+                >
+                  <HiOutlineTrash />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
